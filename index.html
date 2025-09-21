@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Portal - Find Your Dream Job</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="#" class="logo">JobPortal</a>
+            <div class="nav-actions">
+                <select id="roleSelector" class="form-select">
+                    <option value="job_seeker">Job Seeker</option>
+                    <option value="recruiter">Recruiter</option>
+                </select>
+                <button id="themeToggle" class="btn btn-secondary btn-sm">🌙</button>
+                <button id="addJobBtn" class="btn btn-primary" style="display: none;">+ Add Job</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main">
+        <aside class="sidebar">
+            <h3>Filters & Search</h3>
+            
+            <div class="form-group">
+                <label class="form-label">Search Jobs</label>
+                <input type="text" id="searchInput" class="form-input" placeholder="Enter job title or company...">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Location</label>
+                <select id="locationFilter" class="form-select">
+                    <option value="">All Locations</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Job Type</label>
+                <select id="jobTypeFilter" class="form-select">
+                    <option value="">All Types</option>
+                    <option value="full-time">Full Time</option>
+                    <option value="part-time">Part Time</option>
+                    <option value="contract">Contract</option>
+                    <option value="freelance">Freelance</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Experience Level</label>
+                <select id="experienceFilter" class="form-select">
+                    <option value="">All Levels</option>
+                    <option value="entry">Entry Level</option>
+                    <option value="mid">Mid Level</option>
+                    <option value="senior">Senior Level</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Sort By</label>
+                <select id="sortSelect" class="form-select">
+                    <option value="date_desc">Newest First</option>
+                    <option value="date_asc">Oldest First</option>
+                    <option value="title_asc">Title A-Z</option>
+                    <option value="title_desc">Title Z-A</option>
+                    <option value="company_asc">Company A-Z</option>
+                </select>
+            </div>
+
+            <button id="clearFilters" class="btn btn-secondary" style="width: 100%;">Clear All Filters</button>
+
+            <div id="appliedJobsSection" class="applied-section">
+                <h4>Applied Jobs</h4>
+                <div id="appliedJobsList" class="applied-list">
+                </div>
+            </div>
+        </aside>
+
+        <div class="content">
+            <div class="jobs-header">
+                <div>
+                    <h1>Available Jobs</h1>
+                    <p id="jobCount" class="text-muted">Loading jobs...</p>
+                </div>
+                <div class="jobs-actions">
+                    <button id="refreshJobs" class="btn btn-secondary">🔄 Refresh</button>
+                </div>
+            </div>
+
+            <div id="loadingState" class="loading">
+                <div class="loading-spinner"></div>
+                <p>Loading jobs...</p>
+            </div>
+
+            <div id="jobsGrid" class="jobs-grid">
+            </div>
+
+            <div id="noJobsFound" class="no-jobs" style="display: none;">
+                <h3>No jobs found</h3>
+                <p>Try adjusting your filters or search terms.</p>
+            </div>
+        </div>
+    </main>
+
+    <div id="jobModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Job</h2>
+                <button id="closeModal" class="btn-close">&times;</button>
+            </div>
+            <form id="jobForm">
+                <input type="hidden" id="jobId">
+                
+                <div class="form-group">
+                    <label class="form-label">Job Title *</label>
+                    <input type="text" id="jobTitle" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Company *</label>
+                    <input type="text" id="jobCompany" class="form-input" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Location *</label>
+                        <input type="text" id="jobLocation" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Salary</label>
+                        <input type="text" id="jobSalary" class="form-input" placeholder="e.g., $50,000 - $70,000">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Job Type *</label>
+                        <select id="jobType" class="form-select" required>
+                            <option value="">Select Type</option>
+                            <option value="full-time">Full Time</option>
+                            <option value="part-time">Part Time</option>
+                            <option value="contract">Contract</option>
+                            <option value="freelance">Freelance</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Experience Level *</label>
+                        <select id="jobExperience" class="form-select" required>
+                            <option value="">Select Level</option>
+                            <option value="entry">Entry Level</option>
+                            <option value="mid">Mid Level</option>
+                            <option value="senior">Senior Level</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Skills/Requirements</label>
+                    <input type="text" id="jobSkills" class="form-input" placeholder="e.g., JavaScript, React, Node.js (comma separated)">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Job Description *</label>
+                    <textarea id="jobDescription" class="form-textarea" required placeholder="Describe the job role, responsibilities, and requirements..."></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" id="cancelJob" class="btn btn-secondary">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Job</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="jobDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="detailsTitle">Job Details</h2>
+                <button id="closeDetailsModal" class="btn-close">&times;</button>
+            </div>
+            <div id="jobDetails" class="job-details">
+            </div>
+            <div class="modal-actions">
+                <button id="applyForJob" class="btn btn-success">Apply for Job</button>
+                <button id="editJobBtn" class="btn btn-primary" style="display: none;">Edit Job</button>
+                <button id="deleteJobBtn" class="btn btn-danger" style="display: none;">Delete Job</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="notifications" class="notifications"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
